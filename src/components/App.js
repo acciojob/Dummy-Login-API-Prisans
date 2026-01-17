@@ -4,41 +4,51 @@ import { userData } from "./data";
 const App = () => {
   const [email, setEmail] = useState("");
   const [passcode, setPasscode] = useState("");
-  const [isPasscode, setIsPasscode] = useState(false);
-  const [error,setError] = useState(false)
+  //   const [isPasscode, setIsPasscode] = useState(false);
+  //   const [error, setError] = useState(false);
+
+  const [error, setError] = useState({
+    email: "",
+    password: "",
+    form: "",
+  });
 
   // console.log(userData)
 
-   function checkUser(email, passcode) {
+  function checkUser(email, passcode) {
     console.log("calledd");
 
     for (let x of userData) {
-        
-      if(passcode != x.password){
-        setIsPasscode(true)
-      }  
+      if (passcode != x.password) {
+        setError((prev) => ({ ...prev, password: "Password Incorrect" }));
+      }
 
       if (x.email === email && x.password === passcode) {
         return x;
-      } 
+      }
     }
   }
 
   function handleSubmit(e) {
     e.preventDefault();
+    setError({
+        email: "",
+        password: "",
+        form: "",
+      })
 
-   
-      let data = checkUser(email, passcode);
-      setTimeout(() => {
-        if(data){
-            console.log(data)
-        }else{
-            setError(true)
-            console.log("error")
-            throw new Error("User not valid!!")
-        }
-      },3000)
-    
+    let data = checkUser(email, passcode);
+    setTimeout(() => {
+      if (data) {
+        console.log(data);
+       
+      } else {
+        setError((prev) => ({ ...prev, form: "User not found" }));
+
+        console.log("error");
+        throw new Error("User not valid!!");
+      }
+    }, 3000);
   }
 
   return (
@@ -62,8 +72,8 @@ const App = () => {
 
         <button id="submit-form-btn">submit</button>
       </form>
-       <p id="user-error">{error ? "User not found" : ""}</p>
-      {isPasscode && <p id="password-error">Password Incorrect</p>}
+      <p id="user-error">{error.form}</p>
+      <p id="password-error">{error.password}</p>
     </div>
   );
 };
