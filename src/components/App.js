@@ -4,6 +4,7 @@ import { userData } from "./data";
 const App = () => {
   const [email, setEmail] = useState("");
   const [passcode, setPasscode] = useState("");
+  const [isPasscode, setIsPasscode] = useState(false);
   const [error,setError] = useState(false)
 
   // console.log(userData)
@@ -12,6 +13,11 @@ const App = () => {
     console.log("calledd");
 
     for (let x of userData) {
+        
+      if(passcode != x.password){
+        setIsPasscode(true)
+      }  
+
       if (x.email === email && x.password === passcode) {
         return x;
       } 
@@ -57,6 +63,7 @@ const App = () => {
         <button id="submit-form-btn">submit</button>
       </form>
       {error && <p id="user-error">User not found</p>}
+      {isPasscode && <p id="password-error">Password Incorrect</p>}
     </div>
   );
 };
